@@ -69,13 +69,7 @@ class RuleProcessor:
             except Exception as other_exception:
                 result.add_exception(other_exception)
                 logger.exception(
-                    "{} crashed with {} for project - {}, service - {}, stack - {}".format(
-                        type(rule).__name__,
-                        type(other_exception).__name__,
-                        config.project_name,
-                        config.service_name,
-                        config.stack_name,
-                    )
+                    f"{type(rule).__name__} crashed with {type(other_exception).__name__} for project - {config.project_name}, service - {config.service_name}, stack - {config.stack_name}"
                 )
                 continue
 

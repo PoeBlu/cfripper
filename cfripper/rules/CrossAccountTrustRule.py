@@ -47,7 +47,11 @@ class CrossAccountTrustRule(Rule):
                 self.add_failure(type(self).__name__, self.REASON.format(logical_id, principal))
 
     def get_aws_principals(self, statement):
-        for principal in statement.principal:
-            if principal._type == "AWS":
-                return principal.principals
-        return None
+        return next(
+            (
+                principal.principals
+                for principal in statement.principal
+                if principal._type == "AWS"
+            ),
+            None,
+        )

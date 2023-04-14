@@ -39,7 +39,7 @@ class IAMRolesOverprivilegedRule(Rule):
 
         for managed_policy_arn in managed_policy_arns:
             if managed_policy_arn in self._config.forbidden_managed_policy_arns:
-                reason = "Role {} has forbidden Managed Policy {}".format(logical_name, managed_policy_arn)
+                reason = f"Role {logical_name} has forbidden Managed Policy {managed_policy_arn}"
                 self.add_failure(type(self).__name__, reason)
 
     def check_inline_policies(self, logical_name, policies):
@@ -63,7 +63,5 @@ class IAMRolesOverprivilegedRule(Rule):
         for action in statement.get_action_list():
             for prefix in self._config.forbidden_resource_star_action_prefixes:
                 if action.startswith(prefix):
-                    reason = 'Role "{}" contains an insecure permission "{}" in policy "{}"'.format(
-                        logical_name_of_resource, action, policy_name
-                    )
+                    reason = f'Role "{logical_name_of_resource}" contains an insecure permission "{action}" in policy "{policy_name}"'
                     self.add_failure(type(self).__name__, reason)

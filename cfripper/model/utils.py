@@ -36,30 +36,26 @@ def extract_bucket_name_and_path_from_url(url):
     bucket_name = None
     path = None
 
-    # https://bucket.s3.amazonaws.com/path1/path2
-    match = re.search(r"^https://([^.]+).s3.amazonaws.com(.*?)$", url)
-    if match:
-        bucket_name, path = match.group(1), match.group(2)[1:]  # Trim start /
+    if match := re.search(r"^https://([^.]+).s3.amazonaws.com(.*?)$", url):
+        bucket_name, path = match[1], match[2][1:]
 
-    # https://bucket.s3-aws-region.amazonaws.com/path1/path2
-    match = re.search(r"^https://([^.]+).s3-[^\.]+.amazonaws.com(.*?)$", url)
-    if match:
-        bucket_name, path = match.group(1), match.group(2)[1:]  # Trim start /
+    if match := re.search(
+        r"^https://([^.]+).s3-[^\.]+.amazonaws.com(.*?)$", url
+    ):
+        bucket_name, path = match[1], match[2][1:]
 
-    # https://s3.amazonaws.com/bucket/path1/path2
-    match = re.search(r"^https://s3.amazonaws.com/([^\/]+)(.*?)$", url)
-    if match:
-        bucket_name, path = match.group(1), match.group(2)[1:]  # Trim start /
+    if match := re.search(r"^https://s3.amazonaws.com/([^\/]+)(.*?)$", url):
+        bucket_name, path = match[1], match[2][1:]
 
-    # https://s3.aws-region.amazonaws.com/bucket/path1/path2
-    match = re.search(r"^https://s3.[^.]+.amazonaws.com/([^\/]+)(.*?)$", url)
-    if match:
-        bucket_name, path = match.group(1), match.group(2)[1:]  # Trim start /
+    if match := re.search(
+        r"^https://s3.[^.]+.amazonaws.com/([^\/]+)(.*?)$", url
+    ):
+        bucket_name, path = match[1], match[2][1:]
 
-    # https://s3-aws-region.amazonaws.com/bucket/path1/path2
-    match = re.search(r"^https://s3-[^.]+.amazonaws.com/([^\/]+)(.*?)$", url)
-    if match:
-        bucket_name, path = match.group(1), match.group(2)[1:]  # Trim start /
+    if match := re.search(
+        r"^https://s3-[^.]+.amazonaws.com/([^\/]+)(.*?)$", url
+    ):
+        bucket_name, path = match[1], match[2][1:]
 
     if bucket_name is None and path is None:
         raise InvalidURLException(f"Couldn't extract bucket name and path from url: {url}")

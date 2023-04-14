@@ -44,7 +44,7 @@ class ManagedPolicyTransformer(object):
                 policy_version = self.iam_client.get_policy_version(PolicyArn=managed_policy_arn, VersionId=version_id)
                 policy_document_json = {
                     "PolicyDocument": policy_version["PolicyVersion"]["Document"],
-                    "PolicyName": "AutoTransformedManagedPolicy{}".format(version_id),
+                    "PolicyName": f"AutoTransformedManagedPolicy{version_id}",
                 }
                 policy_document = Policy(policy_document_json)
                 resource.policies.append(policy_document)

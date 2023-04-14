@@ -45,11 +45,11 @@ class SecurityGroupOpenToWorldRule(Rule):
 
     def check_single_port(self, logical_name, the_port):
         if str(the_port) not in self._config.allowed_world_open_ports:
-            reason = 'Port {} open to the world in security group "{}"'.format(the_port, logical_name)
+            reason = f'Port {the_port} open to the world in security group "{logical_name}"'
             self.add_failure(type(self).__name__, reason)
 
     def check_port_range(self, logical_name, from_port, to_port):
         for port in range(from_port, to_port + 1):
             if str(port) not in self._config.allowed_world_open_ports:
-                reason = "Ports {} - {} open in Security Group {}".format(from_port, to_port, logical_name)
+                reason = f"Ports {from_port} - {to_port} open in Security Group {logical_name}"
                 self.add_failure(type(self).__name__, reason)

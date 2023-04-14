@@ -45,6 +45,6 @@ class S3BucketPolicyPrincipalRule(Rule):
             account_id_match = re.match(self.PATTERN, principal)
             if not account_id_match:
                 continue
-            account_id = account_id_match.group(1)
+            account_id = account_id_match[1]
             if self._config.aws_principals and account_id not in self._config.aws_principals:
                 self.add_failure(type(self).__name__, self.REASON.format(logical_id, account_id))

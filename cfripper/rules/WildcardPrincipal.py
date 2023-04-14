@@ -80,10 +80,8 @@ class GenericWildcardPrincipal(Rule):
                 )
                 continue
 
-            # Check if account ID is allowed
-            account_id_match = re.match(self.IAM_PATTERN, principal)
-            if account_id_match:
-                self.validate_account_id(account_id=account_id_match.group(1), logical_id=logical_id)
+            if account_id_match := re.match(self.IAM_PATTERN, principal):
+                self.validate_account_id(account_id=account_id_match[1], logical_id=logical_id)
             # Check for other wildcards
             if not re.match(self.FULL_REGEX, principal):
                 # Need to check this because pycfmodel currently returns Statements with *

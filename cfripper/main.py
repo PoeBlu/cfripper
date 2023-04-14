@@ -28,9 +28,7 @@ logger = logging.getLogger(__file__)
 
 def log_results(project_name, service_name, stack_name, rules, _type, warnings, template_url):
     logger.info(
-        "{}: project - {}, service- {}, stack - {}. {} {} URL: {}".format(
-            _type, project_name, service_name, stack_name, json.dumps(rules), str(warnings), template_url
-        )
+        f"{_type}: project - {project_name}, service- {service_name}, stack - {stack_name}. {json.dumps(rules)} {str(warnings)} URL: {template_url}"
     )
 
 
@@ -45,9 +43,13 @@ def perform_logging(result, config, event):
             result.warnings,
             event.get("stack_template_url", "N/A"),
         )
-        logger.info("FAIL: {}; {}; {}".format(config.project_name, config.service_name, config.stack_name))
+        logger.info(
+            f"FAIL: {config.project_name}; {config.service_name}; {config.stack_name}"
+        )
     else:
-        logger.info("PASS: {}; {}; {}".format(config.project_name, config.service_name, config.stack_name))
+        logger.info(
+            f"PASS: {config.project_name}; {config.service_name}; {config.stack_name}"
+        )
     if len(result.failed_monitored_rules) > 0 or len(result.warnings) > 0:
         log_results(
             "Failed monitored rules",
@@ -109,7 +111,9 @@ def handler(event, context):
         aws_user_agent=event.get("user_agent", "N/A"),
     )
 
-    logger.info("Scan started for: {}; {}; {};".format(config.project_name, config.service_name, config.stack_name))
+    logger.info(
+        f"Scan started for: {config.project_name}; {config.service_name}; {config.stack_name};"
+    )
 
     rules = [DEFAULT_RULES.get(rule)(config, result) for rule in config.rules]
     processor = RuleProcessor(*rules)
@@ -120,10 +124,16 @@ def handler(event, context):
 
     return {
         "valid": result.valid,
-        "reason": ",".join(["{}-{}".format(r["rule"], r["reason"]) for r in result.failed_rules]),
-        "failed_rules": RuleProcessor.remove_debug_rules(rules=result.failed_rules),
+        "reason": ",".join(
+            [f'{r["rule"]}-{r["reason"]}' for r in result.failed_rules]
+        ),
+        "failed_rules": RuleProcessor.remove_debug_rules(
+            rules=result.failed_rules
+        ),
         "exceptions": [x.args[0] for x in result.exceptions],
-        "warnings": RuleProcessor.remove_debug_rules(rules=result.failed_monitored_rules),
+        "warnings": RuleProcessor.remove_debug_rules(
+            rules=result.failed_monitored_rules
+        ),
     }
 
 
@@ -142,7 +152,7 @@ def get_template(event):
             if event.get("stack_template_url"):
                 template = boto3_client.download_template_to_dictionary(event["stack_template_url"])
             else:
-                logger.info(f"stack_template_url not available")
+                logger.info("stack_template_url not available")
         except Exception:
             logger.exception(
                 f"Error calling download_template_to_dictionary for: {stack_name} on {account_id} - {region}"

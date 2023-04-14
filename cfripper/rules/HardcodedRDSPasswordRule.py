@@ -43,7 +43,7 @@ class HardcodedRDSPasswordRule(Rule):
         self.add_failure(type(self).__name__, self.REASON.format(resource.logical_id))
 
     def get_parameter(self, parameters, key):
-        for parameter in parameters:
-            if parameter.logical_id == key:
-                return parameter
-        return None
+        return next(
+            (parameter for parameter in parameters if parameter.logical_id == key),
+            None,
+        )

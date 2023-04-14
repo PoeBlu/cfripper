@@ -103,7 +103,6 @@ class TestMainHandler:
         for r in DEFAULT_RULES.values():
             if r.RULE_MODE not in ["BLOCKING", "MONITOR", "DEBUG"]:
                 assert False
-        assert True
 
     def test_stack_whitelist_joins_all_whitelisted_matching_stack_names(self):
         mock_whitelist = {
